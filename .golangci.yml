@@ -1,0 +1,15 @@
+run:
+  deadline: 2m
+
+linters:
+  enable:
+    - errcheck
+    - gas
+    - goconst
+    - goimports
+    - govet
+    - ineffassign
+    - megacheck
+    - revive
+    - unconvert
+    - unused
