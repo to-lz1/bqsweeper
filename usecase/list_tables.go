@@ -2,13 +2,13 @@ package usecase
 
 import (
 	"context"
-	"strings"
+	"regexp"
 
 	"cloud.google.com/go/bigquery"
 	"google.golang.org/api/iterator"
 )
 
-func ListTables(projectID, datasetID, tableIDPrefix string) (tableIDs []string, e error) {
+func ListTables(projectID, datasetID string, tableIDRegex *regexp.Regexp) (tableIDs []string, e error) {
 	ctx := context.Background()
 	client, err := bigquery.NewClient(ctx, projectID)
 	if err != nil {
@@ -25,7 +25,7 @@ func ListTables(projectID, datasetID, tableIDPrefix string) (tableIDs []string, 
 		if err != nil {
 			return nil, err
 		}
-		if strings.HasPrefix(t.TableID, tableIDPrefix) {
+		if tableIDRegex.MatchString(t.TableID) {
 			tableIDs = append(tableIDs, t.TableID)
 		}
 	}
