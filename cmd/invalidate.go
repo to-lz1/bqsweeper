@@ -20,7 +20,7 @@ func init() {
 var dateFormat = "20060102"
 
 var invalidateCmd = &cobra.Command{
-	Use:   "invalidate [datasetID] [tableIDRegex] [expiration(yyyyMMdd)]",
+	Use:   "invalidate [DATASET_ID] [TABLE_ID_REGEXP] [EXPIRATION_DATE(yyyyMMdd)]",
 	Short: "set an expiration date for specified BigQuery table(s)",
 	Long:  "set an expiration date for specified BigQuery table(s)",
 	Args: func(cmd *cobra.Command, args []string) error {
