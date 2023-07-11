@@ -62,11 +62,9 @@ var invalidateCmd = &cobra.Command{
 			return nil
 		}
 
-		for _, tableID := range tableIDs {
-			err = usecase.UpdateTableExpiration(ProjectID, datasetID, tableID, expiration)
-			if err != nil {
-				return err
-			}
+		err = usecase.UpdateTableExpirations(ProjectID, datasetID, tableIDs, expiration)
+		if err != nil {
+			return err
 		}
 		return nil
 	},

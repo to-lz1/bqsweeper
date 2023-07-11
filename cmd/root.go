@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -9,9 +8,10 @@ import (
 
 var ProjectID string
 var rootCmd = &cobra.Command{
-	Use:   "bqsweeper",
-	Short: "bqsweeper is a tool for managing and sweeping BigQuery tables",
-	Long:  "bqsweeper is a tool for managing and sweeping BigQuery tables",
+	Use:          "bqsweeper",
+	Short:        "bqsweeper is a tool for managing and sweeping BigQuery tables",
+	Long:         "bqsweeper is a tool for managing and sweeping BigQuery tables",
+	SilenceUsage: true,
 }
 
 func init() {
@@ -20,7 +20,6 @@ func init() {
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }
