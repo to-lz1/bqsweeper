@@ -8,9 +8,9 @@ import (
 
 var ProjectID string
 var rootCmd = &cobra.Command{
-	Use:   "bqsweeper",
-	Short: "bqsweeper is a tool for managing and sweeping BigQuery tables",
-	Long:  "bqsweeper is a tool for managing and sweeping BigQuery tables",
+	Use:          "bqsweeper",
+	Short:        "bqsweeper is a tool for managing and sweeping BigQuery tables",
+	Long:         "bqsweeper is a tool for managing and sweeping BigQuery tables",
 	SilenceUsage: true,
 }
 

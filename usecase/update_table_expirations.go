@@ -18,7 +18,10 @@ func UpdateTableExpirations(projectID, datasetID string, tableIDs []string, expi
 	for i := 0; i < workersNum; i++ {
 		g.Go(func() error {
 			for tableID := range tasks {
-				UpdateTableExpiration(ctx, projectID, datasetID, tableID, expiration)
+				err := UpdateTableExpiration(ctx, projectID, datasetID, tableID, expiration)
+				if err != nil {
+					return err
+				}
 			}
 			return nil
 		})
@@ -35,8 +38,6 @@ func UpdateTableExpirations(projectID, datasetID string, tableIDs []string, expi
 		}
 	}()
 
-	if err := g.Wait(); err != nil {
-		return err
-	}
-	return nil
+	err := g.Wait()
+	return err
 }

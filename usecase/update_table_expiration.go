@@ -10,10 +10,10 @@ import (
 
 func UpdateTableExpiration(ctx context.Context, projectID, datasetID, tableID string, expiration time.Time) error {
 	client, err := bigquery.NewClient(ctx, projectID)
-	defer client.Close()
 	if err != nil {
 		return err
 	}
+	defer client.Close()
 	tableRef := client.Dataset(datasetID).Table(tableID)
 	metadata, err := tableRef.Metadata(ctx)
 	if err != nil {
