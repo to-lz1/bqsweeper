@@ -13,7 +13,7 @@ func UpdateTableExpirations(projectID, datasetID string, tableIDs []string, expi
 	g, ctx := errgroup.WithContext(ctx)
 	tasks := make(chan string)
 
-	// see also: https://cloud.google.com/bigquery/quotas?hl=ja
+	// see also: https://cloud.google.com/bigquery/quotas#api_request_quotas
 	const workersNum = 16
 	for i := 0; i < workersNum; i++ {
 		g.Go(func() error {
