@@ -1,6 +1,6 @@
 module github.com/to-lz1/bqsweeper
 
-go 1.20
+go 1.23.2
 
 require (
 	cloud.google.com/go/bigquery v1.51.2
