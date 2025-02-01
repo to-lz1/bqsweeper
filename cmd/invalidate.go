@@ -23,7 +23,7 @@ var invalidateCmd = &cobra.Command{
 	Use:   "invalidate [DATASET_ID] [TABLE_ID_REGEXP] [EXPIRATION_DATE(yyyyMMdd)]",
 	Short: "set an expiration date for specified BigQuery table(s)",
 	Long:  "set an expiration date for specified BigQuery table(s)",
-	Args: func(cmd *cobra.Command, args []string) error {
+	Args: func(_ *cobra.Command, args []string) error {
 		if len(args) != 3 {
 			return errors.New("requires 3 arguments")
 		}
@@ -40,7 +40,7 @@ var invalidateCmd = &cobra.Command{
 		}
 		return nil
 	},
-	RunE: func(cmd *cobra.Command, args []string) error {
+	RunE: func(_ *cobra.Command, args []string) error {
 		datasetID := args[0]
 		tableIDRegex := regexp.MustCompile(args[1])
 		expiration, _ := time.Parse(dateFormat, args[2])
