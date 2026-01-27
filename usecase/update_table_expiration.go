@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"fmt"
+	"log/slog"
 	"time"
 
 	"cloud.google.com/go/bigquery"
@@ -25,6 +25,6 @@ func UpdateTableExpiration(ctx context.Context, projectID, datasetID, tableID st
 	if _, err := tableRef.Update(ctx, metadataToUpdate, metadata.ETag); err != nil {
 		return err
 	}
-	fmt.Printf("Expiration date for %s.%s set to %s\n", datasetID, tableID, expiration)
+	slog.Info("Expiration date set", "dataset", datasetID, "table", tableID, "expiration", expiration)
 	return nil
 }

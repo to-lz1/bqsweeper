@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -40,7 +39,7 @@ var invalidateCmd = &cobra.Command{
 		}
 		return nil
 	},
-	RunE: func(_ *cobra.Command, args []string) error {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		datasetID := args[0]
 		tableIDRegex := regexp.MustCompile(args[1])
 		expiration, _ := time.Parse(dateFormat, args[2])
@@ -53,12 +52,12 @@ var invalidateCmd = &cobra.Command{
 			return fmt.Errorf("%w: there is no table in dataset %s.%s with regex %q", ErrNoTables, ProjectID, datasetID, tableIDRegex)
 		}
 
-		fmt.Printf("Found %d table(s) in %s.%s.\n", len(tableIDs), ProjectID, datasetID)
-		fmt.Printf("Are you sure you want to invalidate them all on %s? [y/n]:", expiration.Format(dateFormat))
+		cmd.Printf("Found %d table(s) in %s.%s.\n", len(tableIDs), ProjectID, datasetID)
+		cmd.Printf("Are you sure you want to invalidate them all on %s? [y/n]:", expiration.Format(dateFormat))
 		reader := bufio.NewReader(os.Stdin)
 		text, _ := reader.ReadString('\n')
 		if err != nil || strings.TrimSpace(text) != "y" {
-			fmt.Println("Aborted.")
+			cmd.Println("Aborted.")
 			return nil
 		}
 

@@ -3,9 +3,8 @@ package usecase
 import (
 	"context"
 	"errors"
-	"fmt"
+	"log/slog"
 	"regexp"
-	"time"
 
 	"cloud.google.com/go/bigquery"
 	"google.golang.org/api/iterator"
@@ -28,7 +27,7 @@ func ListTables(projectID, datasetID string, tableIDRegex *regexp.Regexp) (table
 	for {
 		t, err := ts.Next()
 		if i++; i%pagesize == 0 {
-			fmt.Println(time.Now(), "Scanned", i, "tables...")
+			slog.Info("Scanning tables...", "count", i)
 		}
 		if errors.Is(err, iterator.Done) {
 			break
