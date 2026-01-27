@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/bigquery"
+	"github.com/to-lz1/bqsweeper/util"
 )
 
 func UpdateTableExpiration(ctx context.Context, projectID, datasetID, tableID string, expiration time.Time) error {
@@ -13,7 +14,7 @@ func UpdateTableExpiration(ctx context.Context, projectID, datasetID, tableID st
 	if err != nil {
 		return err
 	}
-	defer client.Close()
+	defer util.CloseWithLog(client)
 	tableRef := client.Dataset(datasetID).Table(tableID)
 	metadata, err := tableRef.Metadata(ctx)
 	if err != nil {

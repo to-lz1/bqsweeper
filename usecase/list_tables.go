@@ -8,6 +8,7 @@ import (
 
 	"cloud.google.com/go/bigquery"
 	"google.golang.org/api/iterator"
+	"github.com/to-lz1/bqsweeper/util"
 )
 
 func ListTables(projectID, datasetID string, tableIDRegex *regexp.Regexp) (tableIDs []string, e error) {
@@ -16,7 +17,7 @@ func ListTables(projectID, datasetID string, tableIDRegex *regexp.Regexp) (table
 	if err != nil {
 		return nil, err
 	}
-	defer client.Close()
+	defer util.CloseWithLog(client)
 
 	pagesize := 10000
 	ts := client.Dataset(datasetID).Tables(ctx)
