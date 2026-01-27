@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"regexp"
 	"time"
@@ -29,7 +30,7 @@ func ListTables(projectID, datasetID string, tableIDRegex *regexp.Regexp) (table
 		if i++; i%pagesize == 0 {
 			fmt.Println(time.Now(), "Scanned", i, "tables...")
 		}
-		if err == iterator.Done {
+		if errors.Is(err, iterator.Done) {
 			break
 		}
 		if err != nil {
