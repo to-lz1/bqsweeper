@@ -32,7 +32,7 @@ var invalidateCmd = &cobra.Command{
 		}
 		expiration, err := time.Parse(dateFormat, args[2])
 		if err != nil {
-			return fmt.Errorf("%w: yyyyMMdd format is expected for expiration date. your input: %q: %v", ErrInvalidArgs, args[2], err)
+			return fmt.Errorf("%w: yyyyMMdd format is expected for expiration date. %v", ErrInvalidArgs, err)
 		}
 		if expiration.Before(time.Now()) {
 			return fmt.Errorf("%w: expiration date must be in the future. your input: %q", ErrInvalidArgs, args[2])
