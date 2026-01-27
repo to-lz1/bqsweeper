@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -25,22 +24,22 @@ var invalidateCmd = &cobra.Command{
 	Long:  "set an expiration date for specified BigQuery table(s)",
 	Args: func(_ *cobra.Command, args []string) error {
 		if len(args) != 3 {
-			return errors.New("requires 3 arguments")
+			return fmt.Errorf("%w: requires 3 arguments", ErrInvalidArgs)
 		}
 		_, err := regexp.Compile(args[1])
 		if err != nil {
-			return fmt.Errorf("Invalid tableIDRegex: %s", args[1])
+			return fmt.Errorf("%w: invalid table id regex: %q: %v", ErrInvalidArgs, args[1], err)
 		}
 		expiration, err := time.Parse(dateFormat, args[2])
 		if err != nil {
-			return fmt.Errorf("Invalid expiration date(yyyyMMdd format is expected): %s", args[2])
+			return fmt.Errorf("%w: yyyyMMdd format is expected for expiration date. %v", ErrInvalidArgs, err)
 		}
 		if expiration.Before(time.Now()) {
-			return errors.New("Expiration date must be in the future")
+			return fmt.Errorf("%w: expiration date must be in the future. your input: %q", ErrInvalidArgs, args[2])
 		}
 		return nil
 	},
-	RunE: func(_ *cobra.Command, args []string) error {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		datasetID := args[0]
 		tableIDRegex := regexp.MustCompile(args[1])
 		expiration, _ := time.Parse(dateFormat, args[2])
@@ -50,15 +49,15 @@ var invalidateCmd = &cobra.Command{
 			return err
 		}
 		if len(tableIDs) == 0 {
-			return fmt.Errorf("No tables found in %s.%s with regex %s", ProjectID, datasetID, tableIDRegex)
+			return fmt.Errorf("%w: there is no table in dataset %s.%s with regex %q", ErrNoTables, ProjectID, datasetID, tableIDRegex)
 		}
 
-		fmt.Printf("Found %d table(s) in %s.%s.\n", len(tableIDs), ProjectID, datasetID)
-		fmt.Printf("Are you sure you want to invalidate them all on %s? [y/n]:", expiration.Format(dateFormat))
+		cmd.Printf("Found %d table(s) in %s.%s.\n", len(tableIDs), ProjectID, datasetID)
+		cmd.Printf("Are you sure you want to invalidate them all on %s? [y/n]:", expiration.Format(dateFormat))
 		reader := bufio.NewReader(os.Stdin)
 		text, _ := reader.ReadString('\n')
 		if err != nil || strings.TrimSpace(text) != "y" {
-			fmt.Println("Aborted.")
+			cmd.Println("Aborted.")
 			return nil
 		}
 

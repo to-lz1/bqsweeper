@@ -1,15 +1,35 @@
-run:
-  deadline: 2m
-
+version: "2"
 linters:
+  default: none
   enable:
+    - bodyclose
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - durationcheck
+    - err113
     - errcheck
-    - gas
-    - goconst
-    - goimports
+    - errchkjson
+    - errname
+    - exhaustive
+    - forbidigo
+    - forcetypeassert
+    - gocheckcompilerdirectives
+    - gocritic
+    - gosec
     - govet
+    - iface
     - ineffassign
-    - megacheck
-    - revive
+    - makezero
+    - nilerr
+    - nilnil
+    - nosprintfhostport
+    - prealloc
+    - sloglint
+    - staticcheck
+    - thelper
     - unconvert
+    - unparam
     - unused
+    - usestdlibvars

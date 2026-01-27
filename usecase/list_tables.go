@@ -2,12 +2,13 @@ package usecase
 
 import (
 	"context"
-	"fmt"
+	"errors"
+	"log/slog"
 	"regexp"
-	"time"
 
 	"cloud.google.com/go/bigquery"
 	"google.golang.org/api/iterator"
+	"github.com/to-lz1/bqsweeper/util"
 )
 
 func ListTables(projectID, datasetID string, tableIDRegex *regexp.Regexp) (tableIDs []string, e error) {
@@ -16,7 +17,7 @@ func ListTables(projectID, datasetID string, tableIDRegex *regexp.Regexp) (table
 	if err != nil {
 		return nil, err
 	}
-	defer client.Close()
+	defer util.CloseWithLog(client)
 
 	pagesize := 10000
 	ts := client.Dataset(datasetID).Tables(ctx)
@@ -27,9 +28,9 @@ func ListTables(projectID, datasetID string, tableIDRegex *regexp.Regexp) (table
 	for {
 		t, err := ts.Next()
 		if i++; i%pagesize == 0 {
-			fmt.Println(time.Now(), "Scanned", i, "tables...")
+			slog.Info("Scanning tables...", "count", i)
 		}
-		if err == iterator.Done {
+		if errors.Is(err, iterator.Done) {
 			break
 		}
 		if err != nil {

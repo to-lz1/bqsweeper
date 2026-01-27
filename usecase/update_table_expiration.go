@@ -2,10 +2,11 @@ package usecase
 
 import (
 	"context"
-	"fmt"
+	"log/slog"
 	"time"
 
 	"cloud.google.com/go/bigquery"
+	"github.com/to-lz1/bqsweeper/util"
 )
 
 func UpdateTableExpiration(ctx context.Context, projectID, datasetID, tableID string, expiration time.Time) error {
@@ -13,7 +14,7 @@ func UpdateTableExpiration(ctx context.Context, projectID, datasetID, tableID st
 	if err != nil {
 		return err
 	}
-	defer client.Close()
+	defer util.CloseWithLog(client)
 	tableRef := client.Dataset(datasetID).Table(tableID)
 	metadata, err := tableRef.Metadata(ctx)
 	if err != nil {
@@ -25,6 +26,6 @@ func UpdateTableExpiration(ctx context.Context, projectID, datasetID, tableID st
 	if _, err := tableRef.Update(ctx, metadataToUpdate, metadata.ETag); err != nil {
 		return err
 	}
-	fmt.Printf("Expiration date for %s.%s set to %s\n", datasetID, tableID, expiration)
+	slog.Info("Expiration date set", "dataset", datasetID, "table", tableID, "expiration", expiration)
 	return nil
 }
